@@ -57,17 +57,32 @@ private:
 
     uint32_t start_pos;
     uint32_t current_pos;
-    uint32_t line;
+    uint32_t current_line;
+    uint32_t line_char;
+
+    bool is_whitespace_char(char c);
 protected:
     char current_char;
 
-    void consume_char();
+    // Get the next character (current_char is being taken as part of current
+    // token).  Returns True if whitespace found (current_char will be set to
+    // next non-whitespace character and should not be used as part of current
+    // token).
+    bool consume_char();
     void emit_token(const TokenType& token);
 public:
     VLogLexer(Stream<char>& input);
 
     bool next_token();
 };
+
+struct TokenErr {
+    char* msg;
+    uint32_t line;
+    uint32_t line_char;
+
+    TokenErr(char* m, uint32_t l, uint32_t lc) : msg(m), line(l), line_char(lc) {}
+}
 
 };
 
